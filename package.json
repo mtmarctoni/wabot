@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node server.js",
     "build": "cd client && npm run build && cd ..",
+    "gitpush": "git add . && git commit -m quickUpdate && git push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -19,8 +19,13 @@ const listenMessages = async (client, msgQueue) => {
 
         if (!fromMe) {
             if (hasMedia) {
-                media = await msgObject.downloadMedia()
-                // console.log('Media download ', media);
+                try {
+                    media = await msgObject.downloadMedia()
+                    // console.log('Media download ', media);
+                } catch (err) {
+                    console.log('Error downloading media: ', media);
+                    
+                }
             }
             
             resendMsgToMe(client, msgObject, media)
@@ -30,7 +35,6 @@ const listenMessages = async (client, msgQueue) => {
             const auxContent = body.split(' ')
             const numberES = auxContent[1]
             const recipient = `34${numberES}`
-            const to = `${recipient}@c.us`
             const min = auxContent[2]
             const content = auxContent.slice(3).join(' ')
             // schedule msg for the recipient i set on the oncoing msg
@@ -41,11 +45,6 @@ const listenMessages = async (client, msgQueue) => {
         }
 
     })
-    // client.on('message_create', async (msgObject) => {
-    //     if (msgObject.fromMe) {
-    //         await sendTextMessage(client, me, msgObject.body)
-    //     }
-    // })
 }
 
 const resendMsgToMe = async (client, msgObject, media) => {
