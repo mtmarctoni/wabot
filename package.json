@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "main.js",
   "scripts": {
-    "start": "node .",
+    "start": "node server.js",
+    "build": "cd client && npm run build && cd ..",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,6 +13,8 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "node-schedule": "^2.1.1",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.26.0"
   }
