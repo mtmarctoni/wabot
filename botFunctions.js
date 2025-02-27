@@ -83,8 +83,10 @@ const resendMsgToMe = async (client, msgObject, media) => {
     if (type === 'ptt') {
         const mimetype = media.mimetype
         const dataBase64 = media.data
-        const audioText = await parseAudio(mimetype, dataBase64)
-        msgContent += `\nAudio Text: ${audioText}`
+        if (parsedFrom.chatType === 'chat') {
+            const audioText = await parseAudio(mimetype, dataBase64)
+            msgContent += `\nAudio Text: ${audioText}`
+        }
         await sendTextMessage(client, myChatId, msgContent)
         await sendFileBase64(client, myChatId, mimetype, dataBase64, msgContent)
     }
