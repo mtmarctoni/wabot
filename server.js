@@ -3,6 +3,7 @@ const path = require('path');
 const { Client, LocalAuth } = require('whatsapp-web.js')
 const qrcode = require('qrcode-terminal')
 const msgQueue = require('./msgQueue');
+const {config} = require('./config')
 
 const {
     listenMessages,
@@ -47,7 +48,7 @@ client.on('ready', () => {
 client.initialize()
 
 const app = express();
-const port = 3000;
+const {port} = config;
 
 // Serve static files from the React app build directory
 app.use(express.static(path.join(__dirname, 'client/dist')));

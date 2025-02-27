@@ -1,6 +1,7 @@
 const { MessageMedia } = require('whatsapp-web.js');
 
 const { config } = require('./config.js')
+const {parseAudio} = require('./convertAudioPtt.js')
 
 const {me, senders} = config
 const myChatId = `${me}@c.us`
@@ -10,12 +11,7 @@ const listenMessages = async (client, msgQueue) => {
     client.on('message_create', async (msgObject) => {
         const { from, to, body, type, hasMedia, fromMe } = msgObject
         let media = ''
-        // console.log(JSON.stringify(msgObject));
-        console.log('From ', from)
-        console.log('To', to)
-        console.log('Body', body)
-        console.log('Type', type)
-        console.log('From me', fromMe);
+        logIncomingMsg(msgObject);
 
         if (!fromMe) {
             if (hasMedia) {
@@ -31,7 +27,11 @@ const listenMessages = async (client, msgQueue) => {
             resendMsgToMe(client, msgObject, media)
         }
 
-        if (body.startsWith('/schedule')) {
+        if (body.startsWith('/schedule') && from === to) {
+
+            // add validation function to check the number and minutes (the args)
+            // if there is no match, send an error message and help the user
+
             const auxContent = body.split(' ')
             const numberES = auxContent[1]
             const recipient = `34${numberES}`
@@ -65,19 +65,26 @@ const resendMsgToMe = async (client, msgObject, media) => {
         const mimetype = media.mimetype
         const dataBase64 = media.data
         
-        await sendTextMessage(client, myChatId, msgContent)
+        //await sendTextMessage(client, myChatId, msgContent)
         await sendFileBase64(client, myChatId, mimetype, dataBase64, msgContent)
     }
     if (type === 'video') {
         msgContent += `\nCaption: ${body}`
+        const mimetype = media.mimetype
         const dataBase64 = media.data
         
-        await sendTextMessage(client, myChatId, msgContent)
-        await sendFileBase64(client, myChatId, mimetype, dataBase64, msgContent)
+        try {
+            await sendTextMessage(client, myChatId, msgContent)
+            await sendFileBase64(client, myChatId, mimetype, dataBase64, msgContent)
+        } catch (err) {
+            console.error('Error resending video to me: ', err)
+        }
     }
     if (type === 'ptt') {
         const mimetype = media.mimetype
         const dataBase64 = media.data
+        const audioText = await parseAudio(mimetype, dataBase64)
+        msgContent += `\nAudio Text: ${audioText}`
         await sendTextMessage(client, myChatId, msgContent)
         await sendFileBase64(client, myChatId, mimetype, dataBase64, msgContent)
     }
@@ -124,6 +131,21 @@ const parseFrom = (from) => {
         chatType,
         usType
     }
+}
+
+const logIncomingMsg = (msgObject) => {
+    const { from, to, body, type, hasMedia, fromMe } = msgObject
+
+    console.log(`-------
+📨 Incoming message:
+    ‣> 💬 From: ${from}
+    ‣> 👂 To: ${to}
+    ‣> 📝 Body: ${body}
+    ‣> 📱 Type: ${type}
+    ‣> 📸 Has media: ${hasMedia}
+    ‣> 🙎‍♂️ From me: ${fromMe}
+-------`);
+    
 }
 
 module.exports = {
