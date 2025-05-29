@@ -1,6 +1,7 @@
 {
   "name": "wabot",
   "version": "1.0.0",
+  "description": "WhatsApp Message Scheduler",
   "main": "main.js",
   "type": "commonjs",
   "scripts": {
@@ -9,10 +10,9 @@
     "gitpush": "git add . && git commit -m quickUpdate && git push",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["whatsapp", "scheduler", "bot", "whatsapp-web.js"],
+  "author": "mtmarctoni",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
