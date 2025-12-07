@@ -2,10 +2,8 @@
   "name": "wabot",
   "version": "1.0.0",
   "description": "WhatsApp Message Scheduler",
-  "main": "main.js",
-  "type": "commonjs",
   "scripts": {
-    "start": "node server.js",
+    "start": "npx ts-node server.ts",
     "build": "cd client && npm run build && cd ..",
     "gitpush": "git add . && git commit -m quickUpdate && git push",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -29,7 +27,11 @@
     "whatsapp-web.js": "^1.26.0"
   },
   "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/fluent-ffmpeg": "^2.1.28",
     "@types/node": "^24.10.1",
+    "@types/node-schedule": "^2.1.8",
+    "@types/qrcode-terminal": "^0.12.2",
     "typescript": "^5.9.3"
   }
 }
